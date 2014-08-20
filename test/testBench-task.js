@@ -17,6 +17,13 @@ module.exports = function(grunt) {
   };
 
   self.log = function() {
+    grunt.log.write('log.write');
+    grunt.log.writeln('log.writeln');
+    grunt.log.ok();
     grunt.log.ok('log.ok');
+    grunt.log.oklns('log.oklns');
+    grunt.log.error();
+    grunt.log.error('log.error');
+    grunt.log.errorlns('log.errorlns');
   };
 };
