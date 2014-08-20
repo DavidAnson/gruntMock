@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 
     // Linting
     jshint: {
-      all: [
+      files: [
         '*.js',
         'test/*.js'
       ],
@@ -18,19 +18,26 @@ module.exports = function(grunt) {
 
     // Unit tests
     nodeunit: {
-      tests: ['test/*-test.js']
+      files: ['test/*-test.js']
     },
 
     testBench: {
       register: {},
       log: {},
+    },
+
+    // Watcher
+    watch: {
+      files: ['**/*.js'],
+      tasks: ['default']
     }
   });
 
   // Load required plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
-
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  
   // Load test bench task
   grunt.loadTasks('test');
 
