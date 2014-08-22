@@ -28,6 +28,10 @@ module.exports = function(grunt) {
       // failFatal: {},
       async: {},
       // asyncFatal: {},
+      event: {},
+      file: {},
+      template: {},
+      util: {},
     },
 
     // Watcher

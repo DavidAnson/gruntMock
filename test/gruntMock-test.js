@@ -24,7 +24,7 @@ exports.gruntMockTest = {
     var mock = gruntMock.create({ target: 'register' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
-      testLogs(test, mock, ['testBench registered with target register'], []);
+      testLogs(test, mock, ['testBench registered, target=register'], []);
       test.done();
     });
   },
@@ -85,6 +85,54 @@ exports.gruntMockTest = {
       testLogs(test, mock,
         [],
         ['async/fatal']);
+      test.done();
+    });
+  },
+
+  event: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'event' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['test.event'],
+        []);
+      test.done();
+    });
+  },
+
+  file: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'file' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['package.json: exists=true, name=gruntMock'],
+        []);
+      test.done();
+    });
+  },
+
+  template: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'template' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['template processed'],
+        []);
+      test.done();
+    });
+  },
+
+  util: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'util' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['util, kindOf=boolean, repeat=reprep'],
+        []);
       test.done();
     });
   },

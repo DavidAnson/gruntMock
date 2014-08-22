@@ -13,7 +13,7 @@ module.exports = function(grunt) {
   /* Methods to exercise the Grunt API */
 
   self._register = function() {
-    grunt.log.ok(self.name + ' registered with target ' + self.target);
+    grunt.log.ok(self.name + ' registered, target=' + self.target);
   };
 
   self._log = function() {
@@ -51,5 +51,27 @@ module.exports = function(grunt) {
       grunt.fatal('async/fatal');
       grunt.log.ok('unreachable');
     }, 1);
+  };
+
+  self._event = function() {
+    grunt.event.once('test.event', function() {
+      grunt.log.ok('test.event');
+    });
+    grunt.event.emit('test.event');
+  };
+
+  self._file = function() {
+    var name = 'package.json';
+    var exists = grunt.file.exists(name);
+    var json = grunt.file.readJSON(name);
+    grunt.log.ok(name + ': exists=' + exists + ', name=' + json.name);
+  };
+
+  self._template = function() {
+    grunt.log.ok(grunt.template.process('template <%= msg %>', { data: { msg: 'processed' } }));
+  };
+
+  self._util = function() {
+    grunt.log.ok('util, kindOf=' + grunt.util.kindOf(true) + ', repeat=' + grunt.util.repeat(2, 'rep'));
   };
 };

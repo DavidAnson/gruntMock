@@ -89,10 +89,18 @@ var GruntMock = function(target, files, options) {
   // Grunt shortcuts
 
   self.registerMultiTask  = self.task.registerMultiTask;
-  self.warn = self.fail.warn;
   self.fatal = self.fail.fatal;
+  self.warn = self.fail.warn;
 
-  // Mock entry point
+  // Grunt pass-throughs
+
+  var grunt = require('grunt');
+  self.event = grunt.event;
+  self.file = grunt.file;
+  self.template = grunt.template;
+  self.util = grunt.util;
+
+  // Entry point
 
   self.invoke = function(task, callback) {
     if (!task || (typeof(task) !== 'function')) {
