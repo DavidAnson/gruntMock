@@ -26,6 +26,8 @@ module.exports = function(grunt) {
       log: {},
       // failWarn: {},
       // failFatal: {},
+      async: {},
+      // asyncFatal: {},
     },
 
     // Watcher

@@ -27,6 +27,7 @@ var GruntMock = function(target, files, options) {
 
   self.task = {
     registerMultiTask: function(name, info, fn) {
+      var asyncCalled = false;
       // The initial call to registerMultiTask happens during the parse of a task function's body;
       // defer calling back into the task so the rest of the function will be processed
       process.nextTick(function() {
@@ -36,10 +37,19 @@ var GruntMock = function(target, files, options) {
           files: self._files,
           options: function() {
             return self._options;
+          },
+          async: function() {
+            asyncCalled = true;
+            return function() {
+              // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
+              throw self;
+            };
           }
         });
-        // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
-        throw self;
+        if (!asyncCalled) {
+          // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
+          throw self;
+        }
       });
     }
   };

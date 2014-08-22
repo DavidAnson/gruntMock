@@ -63,5 +63,29 @@ exports.gruntMockTest = {
         ['fail.fatal']);
       test.done();
     });
-  }
+  },
+
+  async: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'async' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['async'],
+        []);
+      test.done();
+    });
+  },
+
+  asyncFatal: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'asyncFatal' });
+    mock.invoke(testBench, function(err) {
+      test.equal(err.message, 'async/fatal');
+      testLogs(test, mock,
+        [],
+        ['async/fatal']);
+      test.done();
+    });
+  },
 };
