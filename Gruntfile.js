@@ -24,6 +24,8 @@ module.exports = function(grunt) {
     testBench: {
       register: {},
       log: {},
+      // failWarn: {},
+      // failFatal: {},
     },
 
     // Watcher

@@ -8,17 +8,16 @@
 
 'use strict';
 
+var domain = require('domain');
+
 // Mock implementation
-var GruntMock = function(target, files, options, callback) {
+var GruntMock = function(target, files, options) {
   var self = this;
 
   // Parameters
   self._target = target || '*';
   self._files = files || [];
   self._options = options || {};
-  if (!callback || (typeof callback !== 'function')) {
-    throw new Error('gruntMock is async; must provide a function callback');
-  }
 
   // Public variables
   self.logError = [];
@@ -28,8 +27,10 @@ var GruntMock = function(target, files, options, callback) {
 
   self.task = {
     registerMultiTask: function(name, info, fn) {
+      // The initial call to registerMultiTask happens during the parse of a task function's body;
+      // defer calling back into the task so the rest of the function will be processed
       process.nextTick(function() {
-        fn.apply({
+        fn.call({
           name: name,
           target: self._target,
           files: self._files,
@@ -37,42 +38,82 @@ var GruntMock = function(target, files, options, callback) {
             return self._options;
           }
         });
-        callback();
+        // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
+        throw self;
       });
     }
   };
 
   self.log = {
-    error: function(s) {
-      self.logError.push(s || 'ERROR');
+    error: function(msg) {
+      self.logError.push(msg || 'ERROR');
     },
-    errorlns: function(s) {
-      self.logError.push(s);
+    errorlns: function(msg) {
+      self.logError.push(msg);
     },
-    ok: function(s) {
-      self.logOk.push(s || 'OK');
+    ok: function(msg) {
+      self.logOk.push(msg || 'OK');
     },
-    oklns: function(s) {
-      self.logOk.push(s);
+    oklns: function(msg) {
+      self.logOk.push(msg);
     },
-    write: function(s) {
-      self.logOk.push(s);
+    write: function(msg) {
+      self.logOk.push(msg);
     },
-    writeln: function(s) {
-      self.logOk.push(s);
+    writeln: function(msg) {
+      self.logOk.push(msg);
+    }
+  };
+
+  self.fail = {
+    warn: function(error) {
+      self.logError.push(error);
+      throw new Error(error);
     },
+    fatal: function(error) {
+      self.logError.push(error);
+      throw new Error(error);
+    }
   };
 
   // Grunt shortcuts
 
   self.registerMultiTask  = self.task.registerMultiTask;
+  self.warn = self.fail.warn;
+  self.fatal = self.fail.fatal;
+
+  // Mock entry point
+
+  self.invoke = function(task, callback) {
+    if (!task || (typeof(task) !== 'function')) {
+      throw new Error('Must provide task parameter of type function');
+    }
+    if (!callback || (typeof(callback) !== 'function')) {
+      throw new Error('Must provide callback parameter of type function');
+    }
+
+    var d = domain.create();
+    d.on('error', function(err) {
+      d.dispose();
+      if (err !== self) {
+        callback(err);
+      } else {
+        callback();
+      }
+    });
+    d.run(function() {
+      // Want to include synchronous exceptions in the domain, so use nextTick
+      process.nextTick(function() {
+        task(self);
+      });
+    });
+  };
 };
 
 // Factory function
-module.exports.create = function(config, callback) {
+module.exports.create = function(config) {
   return new GruntMock(
     config.target,
     config.files,
-    config.options,
-    callback);
+    config.options);
 };

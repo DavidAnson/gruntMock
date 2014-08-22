@@ -20,26 +20,48 @@ function testLogs(test, mock, ok, error) {
 exports.gruntMockTest = {
 
   register: function(test) {
-    test.expect(3);
-    var mock = gruntMock.create(
-      { target: 'register' },
-      function() {
-        testLogs(test, mock, ['testBench registered with target register'], []);
-        test.done();
-      });
-    testBench(mock);
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'register' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock, ['testBench registered with target register'], []);
+      test.done();
+    });
   },
 
   log: function(test) {
-    test.expect(10);
-    var mock = gruntMock.create(
-      { target: 'log' },
-      function() {
-        testLogs(test, mock,
-          ['log.write', 'log.writeln', 'OK', 'log.ok', 'log.oklns'],
-          ['ERROR', 'log.error', 'log.errorlns']);
-        test.done();
-      });
-    testBench(mock);
+    test.expect(11);
+    var mock = gruntMock.create({ target: 'log' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['log.write', 'log.writeln', 'OK', 'log.ok', 'log.oklns'],
+        ['ERROR', 'log.error', 'log.errorlns']);
+      test.done();
+    });
+  },
+
+  failWarn: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'failWarn' });
+    mock.invoke(testBench, function(err) {
+      test.equal(err.message, 'fail.warn');
+      testLogs(test, mock,
+        [],
+        ['fail.warn']);
+      test.done();
+    });
+  },
+
+  failFatal: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'failFatal' });
+    mock.invoke(testBench, function(err) {
+      test.equal(err.message, 'fail.fatal');
+      testLogs(test, mock,
+        [],
+        ['fail.fatal']);
+      test.done();
+    });
   }
 };

@@ -26,4 +26,14 @@ module.exports = function(grunt) {
     grunt.log.error('log.error');
     grunt.log.errorlns('log.errorlns');
   };
+
+  self.failWarn = function() {
+    grunt.warn('fail.warn');
+    grunt.log.ok('unreachable');
+  };
+
+  self.failFatal = function() {
+    grunt.fatal('fail.fatal');
+    grunt.log.ok('unreachable');
+  };
 };
