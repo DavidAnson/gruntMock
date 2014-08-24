@@ -9,6 +9,7 @@
 'use strict';
 
 var domain = require('domain');
+var util = require('util');
 
 // Mock implementation
 var GruntMock = function(target, files, options) {
@@ -55,6 +56,9 @@ var GruntMock = function(target, files, options) {
   };
 
   self.log = {
+    debug: function(msg) {
+      self.logOk.push(msg);
+    },
     error: function(msg) {
       self.logError.push(msg || 'ERROR');
     },
@@ -67,13 +71,25 @@ var GruntMock = function(target, files, options) {
     oklns: function(msg) {
       self.logOk.push(msg);
     },
+    subhead: function(msg) {
+      self.logOk.push(msg);
+    },
     write: function(msg) {
       self.logOk.push(msg);
     },
     writeln: function(msg) {
       self.logOk.push(msg);
+    },
+    writeflags: function(obj, prefix) {
+      // Use util.inspect as a simple, external implementation of writeflags
+      self.logOk.push(prefix + ': ' + util.inspect(obj));
     }
   };
+  // Map log to some of its aliases
+  self.log.verbose = self.log;
+  self.log.notverbose = self.log;
+  self.verbose = self.log;
+  self.verbose.or = self.log;
 
   self.fail = {
     warn: function(error) {
@@ -95,10 +111,12 @@ var GruntMock = function(target, files, options) {
   // Grunt pass-throughs
 
   var grunt = require('grunt');
-  self.event = grunt.event;
-  self.file = grunt.file;
-  self.template = grunt.template;
-  self.util = grunt.util;
+  ['event', 'file', 'template', 'util'].forEach(function(name) {
+    self[name] = grunt[name];
+  });
+  ['table', 'wordlist', 'wraptext', 'uncolor'].forEach(function(name) {
+    self.log[name] = grunt.log[name];
+  });
 
   // Entry point
 

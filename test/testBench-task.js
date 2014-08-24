@@ -25,6 +25,16 @@ module.exports = function(grunt) {
     grunt.log.error();
     grunt.log.error('log.error');
     grunt.log.errorlns('log.errorlns');
+    grunt.log.debug('log.debug');
+    grunt.log.subhead('log.subhead');
+    grunt.log.writeflags({ string: 'string', number: 10 }, 'log.writeflags');
+    grunt.log.verbose.ok('log.verbose.ok');
+    grunt.log.notverbose.ok('log.notverbose.ok');
+    grunt.verbose.ok('verbose.ok');
+    grunt.verbose.or.ok('verbose.or.ok');
+    grunt.log.ok(grunt.log.uncolor(grunt.log.wordlist(['grunt', 'log', 'wordlist'])));
+    grunt.log.ok(grunt.log.wraptext(10, 'grunt log wraptext'));
+    grunt.log.ok(grunt.log.table([1, 2, 3, 4, 5], ['1', '2', '3', '4', '5']));
   };
 
   self._failWarn = function() {

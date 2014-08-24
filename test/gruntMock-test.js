@@ -30,12 +30,14 @@ exports.gruntMockTest = {
   },
 
   log: function(test) {
-    test.expect(11);
+    test.expect(21);
     var mock = gruntMock.create({ target: 'log' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
       testLogs(test, mock,
-        ['log.write', 'log.writeln', 'OK', 'log.ok', 'log.oklns'],
+        ['log.write', 'log.writeln', 'OK', 'log.ok', 'log.oklns', 'log.debug', 'log.subhead',
+         'log.writeflags: { string: \'string\', number: 10 }', 'log.verbose.ok', 'log.notverbose.ok',
+         'verbose.ok', 'verbose.or.ok', 'grunt, log, wordlist', 'grunt log\nwraptext', '12 3  4   5    '],
         ['ERROR', 'log.error', 'log.errorlns']);
       test.done();
     });
