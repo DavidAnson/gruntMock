@@ -27,6 +27,20 @@ module.exports = function(grunt) {
       log: {},
       // failWarn: {},
       // failFatal: {},
+      optionsEmpty: {},
+      optionsSimple: {
+        options: {
+          string: 'options',
+          number: 1,
+        }
+      },
+      optionsDefault: {},
+      optionsMerged: {
+        options: {
+          string: 'options',
+          number: 1,
+        }
+      },
       async: {},
       asyncTrue: {},
       // asyncFalse: {},

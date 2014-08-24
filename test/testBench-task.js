@@ -1,13 +1,13 @@
 'use strict';
 
+var util = require('util');
+
 module.exports = function(grunt) {
   var self = {};
 
   // Register the task with Grunt
   grunt.registerMultiTask('testBench', 'Provides an environment for testing gruntMock.', function() {
-    self.name = this.name;
-    self.target = this.target;
-    self['_' + self.target].call(this);
+    self['_' + this.target].call(this);
   });
 
   /* Methods to exercise the Grunt API */
@@ -17,7 +17,14 @@ module.exports = function(grunt) {
   };
 
   self._register = function() {
-    grunt.log.ok(self.name + ' registered, target=' + self.target + ', option.flags=' + grunt.option.flags());
+    grunt.log.ok(this.name + ' registered, ' + util.inspect({
+      args: this.args,
+      flags: this.flags,
+      name: this.name,
+      nameArgs: this.nameArgs,
+      target: this.target,
+      optionFlags: grunt.option.flags(),
+    }).replace(/\n/g, ''));
   };
 
   self._log = function() {
@@ -49,6 +56,22 @@ module.exports = function(grunt) {
   self._failFatal = function() {
     grunt.fatal('fail.fatal');
     grunt.log.ok('unreachable');
+  };
+
+  self._optionsEmpty = function() {
+    grunt.log.writeflags(this.options());
+  };
+
+  self._optionsSimple = function() {
+    grunt.log.writeflags(this.options());
+  };
+
+  self._optionsDefault = function() {
+    grunt.log.writeflags(this.options({ string: 'default', boolean: true }));
+  };
+
+  self._optionsMerged = function() {
+    grunt.log.writeflags(this.options({ string: 'default', boolean: true }));
   };
 
   self._async = function() {

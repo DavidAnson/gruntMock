@@ -34,7 +34,9 @@ exports.gruntMockTest = {
     var mock = gruntMock.create({ target: 'register' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
-      testLogs(test, mock, ['testBench registered, target=register, option.flags='], []);
+      testLogs(test, mock,
+        ['testBench registered, { args: [],  flags: {},  name: \'testBench\',  nameArgs: \'testBench:register\',  target: \'register\',  optionFlags: [] }'],
+        []);
       test.done();
     });
   },
@@ -73,6 +75,66 @@ exports.gruntMockTest = {
       testLogs(test, mock,
         [],
         ['fail.fatal']);
+      test.done();
+    });
+  },
+
+  optionsEmpty: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'optionsEmpty' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['Flags: (none)'],
+        []);
+      test.done();
+    });
+  },
+
+  optionsSimple: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({
+      target: 'optionsSimple',
+      options: {
+        string: 'options',
+        number: 1,
+      }
+    });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['Flags: { string: \'options\', number: 1 }'],
+        []);
+      test.done();
+    });
+  },
+
+  optionsDefault: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'optionsDefault'});
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['Flags: { string: \'default\', boolean: true }'],
+        []);
+      test.done();
+    });
+  },
+
+  optionMerged: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({
+      target: 'optionsMerged',
+      options: {
+        string: 'options',
+        number: 1,
+      }
+    });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['Flags: { string: \'options\', boolean: true, number: 1 }'],
+        []);
       test.done();
     });
   },

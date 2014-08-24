@@ -35,9 +35,17 @@ var GruntMock = function(target, files, options) {
         fn.call({
           name: name,
           target: self._target,
+          nameArgs: name + ':' + self._target,
           files: self._files,
-          options: function() {
-            return self._options;
+          options: function(defaults) {
+            var result = {};
+            Object.keys(defaults || {}).forEach(function(key) {
+              result[key] = defaults[key];
+            });
+            Object.keys(self._options).forEach(function(key) {
+              result[key] = self._options[key];
+            });
+            return result;
           },
           async: function() {
             asyncCalled = true;
@@ -45,7 +53,9 @@ var GruntMock = function(target, files, options) {
               var failed = (false === result) || (result instanceof Error);
               throw failed ? result : self;
             };
-          }
+          },
+          args: [],
+          flags: {}
         });
         if (!asyncCalled) {
           // Throw (a sentinel value) for unified handling of task completion (below in invoke)
@@ -82,7 +92,7 @@ var GruntMock = function(target, files, options) {
     },
     writeflags: function(obj, prefix) {
       // Use util.inspect as a simple, external implementation of writeflags
-      self.logOk.push(prefix + ': ' + util.inspect(obj));
+      self.logOk.push((prefix || 'Flags') + ': ' + (0 < Object.keys(obj).length ? util.inspect(obj) : '(none)'));
     }
   };
   // Map log to some of its aliases
