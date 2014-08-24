@@ -12,8 +12,12 @@ module.exports = function(grunt) {
 
   /* Methods to exercise the Grunt API */
 
+  self._grunt = function() {
+    grunt.log.ok('grunt version=' + grunt.version + ', package.name=' + grunt.package.name);
+  };
+
   self._register = function() {
-    grunt.log.ok(self.name + ' registered, target=' + self.target);
+    grunt.log.ok(self.name + ' registered, target=' + self.target + ', option.flags=' + grunt.option.flags());
   };
 
   self._log = function() {

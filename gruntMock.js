@@ -102,16 +102,19 @@ var GruntMock = function(target, files, options) {
     }
   };
 
+  self.package = require('./package.json');
+
   // Grunt shortcuts
 
   self.registerMultiTask  = self.task.registerMultiTask;
   self.fatal = self.fail.fatal;
   self.warn = self.fail.warn;
+  self.version = self.package.version;
 
   // Grunt pass-throughs
 
   var grunt = require('grunt');
-  ['event', 'file', 'template', 'util'].forEach(function(name) {
+  ['event', 'file', 'option', 'template', 'util'].forEach(function(name) {
     self[name] = grunt[name];
   });
   ['table', 'wordlist', 'wraptext', 'uncolor'].forEach(function(name) {

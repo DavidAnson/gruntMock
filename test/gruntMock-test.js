@@ -19,12 +19,22 @@ function testLogs(test, mock, ok, error) {
 
 exports.gruntMockTest = {
 
+  grunt: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'grunt' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock, ['grunt version=0.1.0, package.name=gruntMock'], []);
+      test.done();
+    });
+  },
+
   register: function(test) {
     test.expect(4);
     var mock = gruntMock.create({ target: 'register' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
-      testLogs(test, mock, ['testBench registered, target=register'], []);
+      testLogs(test, mock, ['testBench registered, target=register, option.flags='], []);
       test.done();
     });
   },

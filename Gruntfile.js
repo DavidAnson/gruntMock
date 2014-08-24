@@ -22,6 +22,7 @@ module.exports = function(grunt) {
     },
 
     testBench: {
+      grunt: {},
       register: {},
       log: {},
       // failWarn: {},
