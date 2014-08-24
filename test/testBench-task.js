@@ -50,15 +50,35 @@ module.exports = function(grunt) {
   self._async = function() {
     var done = this.async();
     setTimeout(function() {
-      grunt.log.ok('async');
       done();
+    }, 1);
+  };
+
+  self._asyncTrue = function() {
+    var done = this.async();
+    setTimeout(function() {
+      done(true);
+    }, 1);
+  };
+
+  self._asyncFalse = function() {
+    var done = this.async();
+    setTimeout(function() {
+      done(false);
+    }, 1);
+  };
+
+  self._asyncError = function() {
+    var done = this.async();
+    setTimeout(function() {
+      done(new Error('asyncError'));
     }, 1);
   };
 
   self._asyncFatal = function() {
     this.async();
     setTimeout(function() {
-      grunt.fatal('async/fatal');
+      grunt.fatal('asyncFatal');
       grunt.log.ok('unreachable');
     }, 1);
   };

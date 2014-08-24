@@ -68,13 +68,42 @@ exports.gruntMockTest = {
   },
 
   async: function(test) {
-    test.expect(4);
+    test.expect(3);
     var mock = gruntMock.create({ target: 'async' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
-      testLogs(test, mock,
-        ['async'],
-        []);
+      testLogs(test, mock, [], []);
+      test.done();
+    });
+  },
+
+  asyncTrue: function(test) {
+    test.expect(3);
+    var mock = gruntMock.create({ target: 'asyncTrue' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock, [], []);
+      test.done();
+    });
+  },
+
+  asyncFalse: function(test) {
+    test.expect(3);
+    var mock = gruntMock.create({ target: 'asyncFalse' });
+    mock.invoke(testBench, function(err) {
+      test.ok(false === err);
+      testLogs(test, mock, [], []);
+      test.done();
+    });
+  },
+
+  asyncError: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({ target: 'asyncError' });
+    mock.invoke(testBench, function(err) {
+      test.ok(err instanceof Error);
+      test.equal('asyncError', err.message);
+      testLogs(test, mock, [], []);
       test.done();
     });
   },
@@ -83,10 +112,10 @@ exports.gruntMockTest = {
     test.expect(4);
     var mock = gruntMock.create({ target: 'asyncFatal' });
     mock.invoke(testBench, function(err) {
-      test.equal(err.message, 'async/fatal');
+      test.equal(err.message, 'asyncFatal');
       testLogs(test, mock,
         [],
-        ['async/fatal']);
+        ['asyncFatal']);
       test.done();
     });
   },

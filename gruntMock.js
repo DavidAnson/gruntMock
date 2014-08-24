@@ -41,14 +41,14 @@ var GruntMock = function(target, files, options) {
           },
           async: function() {
             asyncCalled = true;
-            return function() {
-              // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
-              throw self;
+            return function(result) {
+              var failed = (false === result) || (result instanceof Error);
+              throw failed ? result : self;
             };
           }
         });
         if (!asyncCalled) {
-          // Throw (with a sentinel value) for unified handling of task completion (below in invoke)
+          // Throw (a sentinel value) for unified handling of task completion (below in invoke)
           throw self;
         }
       });
