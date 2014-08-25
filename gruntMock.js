@@ -20,6 +20,9 @@ var GruntMock = function(target, files, options) {
   self._files = files || [];
   self._options = options || {};
 
+  // Private variables
+  self._context = {};
+
   // Public variables
   self.logError = [];
   self.logOk = [];
@@ -29,34 +32,36 @@ var GruntMock = function(target, files, options) {
   self.task = {
     registerMultiTask: function(name, info, fn) {
       var asyncCalled = false;
+      self._context = {
+        name: name,
+        target: self._target,
+        nameArgs: name + ':' + self._target,
+        files: self._files,
+        options: function(defaults) {
+          var result = {};
+          Object.keys(defaults || {}).forEach(function(key) {
+            result[key] = defaults[key];
+          });
+          Object.keys(self._options).forEach(function(key) {
+            result[key] = self._options[key];
+          });
+          return result;
+        },
+        async: function() {
+          asyncCalled = true;
+          return function(result) {
+            var failed = (false === result) || (result instanceof Error);
+            throw failed ? result : self;
+          };
+        },
+        errorCount: 0,
+        args: [],
+        flags: {}
+      };
       // The initial call to registerMultiTask happens during the parse of a task function's body;
       // defer calling back into the task so the rest of the function will be processed
       process.nextTick(function() {
-        fn.call({
-          name: name,
-          target: self._target,
-          nameArgs: name + ':' + self._target,
-          files: self._files,
-          options: function(defaults) {
-            var result = {};
-            Object.keys(defaults || {}).forEach(function(key) {
-              result[key] = defaults[key];
-            });
-            Object.keys(self._options).forEach(function(key) {
-              result[key] = self._options[key];
-            });
-            return result;
-          },
-          async: function() {
-            asyncCalled = true;
-            return function(result) {
-              var failed = (false === result) || (result instanceof Error);
-              throw failed ? result : self;
-            };
-          },
-          args: [],
-          flags: {}
-        });
+        fn.call(self._context);
         if (!asyncCalled) {
           // Throw (a sentinel value) for unified handling of task completion (below in invoke)
           throw self;
@@ -67,28 +72,30 @@ var GruntMock = function(target, files, options) {
 
   self.log = {
     debug: function(msg) {
-      self.logOk.push(msg);
+      self.logOk.push(msg + '');
     },
     error: function(msg) {
-      self.logError.push(msg || 'ERROR');
+      self.logError.push((undefined === msg ? 'ERROR' : msg) + '');
+      self._context.errorCount++;
     },
     errorlns: function(msg) {
-      self.logError.push(msg);
+      self.logError.push(msg + '');
+      self._context.errorCount++;
     },
     ok: function(msg) {
-      self.logOk.push(msg || 'OK');
+      self.logOk.push((undefined === msg ? 'OK' : msg) + '');
     },
     oklns: function(msg) {
-      self.logOk.push(msg);
+      self.logOk.push(msg + '');
     },
     subhead: function(msg) {
-      self.logOk.push(msg);
+      self.logOk.push(msg + '');
     },
     write: function(msg) {
-      self.logOk.push(msg);
+      self.logOk.push(msg + '');
     },
     writeln: function(msg) {
-      self.logOk.push(msg);
+      self.logOk.push(msg + '');
     },
     writeflags: function(obj, prefix) {
       // Use util.inspect as a simple, external implementation of writeflags

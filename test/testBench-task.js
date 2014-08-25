@@ -31,9 +31,11 @@ module.exports = function(grunt) {
     grunt.log.write('log.write');
     grunt.log.writeln('log.writeln');
     grunt.log.ok();
+    grunt.log.ok(0);
     grunt.log.ok('log.ok');
     grunt.log.oklns('log.oklns');
     grunt.log.error();
+    grunt.log.error(false);
     grunt.log.error('log.error');
     grunt.log.errorlns('log.errorlns');
     grunt.log.debug('log.debug');
@@ -46,6 +48,7 @@ module.exports = function(grunt) {
     grunt.log.ok(grunt.log.uncolor(grunt.log.wordlist(['grunt', 'log', 'wordlist'])));
     grunt.log.ok(grunt.log.wraptext(10, 'grunt log wraptext'));
     grunt.log.ok(grunt.log.table([1, 2, 3, 4, 5], ['1', '2', '3', '4', '5']));
+    grunt.log.ok(this.errorCount);
   };
 
   self._failWarn = function() {
