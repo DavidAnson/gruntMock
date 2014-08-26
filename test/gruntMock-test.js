@@ -139,6 +139,36 @@ exports.gruntMockTest = {
     });
   },
 
+  filesCompact: function(test) {
+    // Unused; see filesArray
+    test.done();
+  },
+
+  filesObject: function(test) {
+    // Unused; see filesArray
+    test.done();
+  },
+
+  filesArray: function(test) {
+    test.expect(6);
+    var mock = gruntMock.create({
+      target: 'filesArray',
+      files: [
+        { src: ['a.txt', 'b.txt'] },
+        { src: ['c.txt'], dest: 'd.txt', extra: 1 },
+      ]
+    });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock,
+        ['Item: { src: [ \'a.txt\', \'b.txt\' ] }',
+         'Item: { src: [ \'c.txt\' ], dest: \'d.txt\', extra: 1 }',
+         'a.txt,b.txt,c.txt'],
+        []);
+      test.done();
+    });
+  },
+
   async: function(test) {
     test.expect(3);
     var mock = gruntMock.create({ target: 'async' });

@@ -37,6 +37,7 @@ var GruntMock = function(target, files, options) {
         target: self._target,
         nameArgs: name + ':' + self._target,
         files: self._files,
+        filesSrc: [],
         options: function(defaults) {
           var result = {};
           Object.keys(defaults || {}).forEach(function(key) {
@@ -58,6 +59,11 @@ var GruntMock = function(target, files, options) {
         args: [],
         flags: {}
       };
+      self._files.forEach(function(item) {
+        (item.src || []).forEach(function(file) {
+          self._context.filesSrc.push(file);
+        });
+      });
       // The initial call to registerMultiTask happens during the parse of a task function's body;
       // defer calling back into the task so the rest of the function will be processed
       process.nextTick(function() {

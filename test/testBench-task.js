@@ -77,6 +77,16 @@ module.exports = function(grunt) {
     grunt.log.writeflags(this.options({ string: 'default', boolean: true }));
   };
 
+  var filesHandler = function() {
+    this.files.forEach(function(item) {
+      grunt.log.writeflags(item, 'Item');
+    });
+    grunt.log.ok(this.filesSrc);
+  };
+  self._filesCompact = filesHandler;
+  self._filesObject = filesHandler;
+  self._filesArray = filesHandler;
+
   self._async = function() {
     var done = this.async();
     setTimeout(function() {

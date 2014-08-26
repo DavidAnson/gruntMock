@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 
     // Linting
     jshint: {
-      files: [
+      src: [
         '*.js',
         'test/*.js'
       ],
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 
     // Unit tests
     nodeunit: {
-      files: ['test/*-test.js']
+      src: ['test/*-test.js']
     },
 
     testBench: {
@@ -40,6 +40,21 @@ module.exports = function(grunt) {
           string: 'options',
           number: 1,
         }
+      },
+      filesCompact: {
+        src: ['*.js', 'test/*.js']
+      },
+      filesObject: {
+        files: {
+          'root.js': ['*.js'],
+          'test.js': ['test/*.js']
+        }
+      },
+      filesArray: {
+        files: [
+          { src: ['*.js'], dest: 'root.js', extra: 0 },
+          { src: ['test/*.js'], dest: 'test.js', extra: 1 }
+        ]
       },
       async: {},
       asyncTrue: {},
