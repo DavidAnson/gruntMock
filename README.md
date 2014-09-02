@@ -29,7 +29,68 @@ mock.okLogs, ...
 
 ## Supported APIs
 
-...
+### [grunt](http://gruntjs.com/api/grunt)
+* `registerMultiTask`
+* `warn`
+* `fatal`
+* `option`
+* `package`
+* `version`
+
+*UNSUPPORTED*: `loadTasks`, `loadNpmTasks`, `registerTask`, `renameTask`
+
+### [grunt.config](http://gruntjs.com/api/grunt.config)
+
+*UNSUPPORTED*: All methods
+
+### [grunt.event](http://gruntjs.com/api/grunt.event)
+
+* All methods (via pass-through)
+
+### [grunt.fail](http://gruntjs.com/api/grunt.fail)
+
+* All methods
+
+### [grunt.file](http://gruntjs.com/api/grunt.file)
+
+* All methods (via pass-through)
+
+### [grunt.log](http://gruntjs.com/api/grunt.log)
+
+* All methods
+
+### [grunt.option](http://gruntjs.com/api/grunt.option)
+
+* All methods (via pass-through)
+
+### [grunt.task](http://gruntjs.com/api/grunt.task)
+
+* registerMultiTask
+
+*UNSUPPORTED*: All other methods
+
+### [grunt.template](http://gruntjs.com/api/grunt.template)
+
+* All methods (via pass-through)
+
+### [grunt.util](http://gruntjs.com/api/grunt.util)
+
+* All methods (via pass-through)
+
+### [Inside Tasks](http://gruntjs.com/api/inside-tasks)
+
+* `async`
+* `errorCount`
+* `files` (see "Notes" below)
+* `filesSrc`
+* `name`
+* `nameArgs`
+* `options`
+* `target`
+* `args` (always empty)
+* `flags` (always empty)
+
+*UNSUPPORTED*: `data`, `requires`, `requiresConfig`
 
 ## Notes
 
