@@ -37,12 +37,6 @@ mock.okLogs, ...
 * `package`
 * `version`
 
-*UNSUPPORTED*: `loadTasks`, `loadNpmTasks`, `registerTask`, `renameTask`
-
-### [grunt.config](http://gruntjs.com/api/grunt.config)
-
-*UNSUPPORTED*: All methods
-
 ### [grunt.event](http://gruntjs.com/api/grunt.event)
 
 * All methods (via pass-through)
@@ -67,8 +61,6 @@ mock.okLogs, ...
 
 * registerMultiTask
 
-*UNSUPPORTED*: All other methods
-
 ### [grunt.template](http://gruntjs.com/api/grunt.template)
 
 * All methods (via pass-through)
@@ -89,8 +81,6 @@ mock.okLogs, ...
 * `target`
 * `args` (always empty)
 * `flags` (always empty)
-
-*UNSUPPORTED*: `data`, `requires`, `requiresConfig`
 
 ## Notes
 
