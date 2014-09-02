@@ -5,22 +5,12 @@ module.exports = function(grunt) {
   // Project configuration
   grunt.initConfig({
 
-    // Linting
-    jshint: {
-      src: [
-        '*.js',
-        'test/*.js'
-      ],
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
-
     // Unit tests
     nodeunit: {
       src: ['test/*-test.js']
     },
 
+    // Test bench
     testBench: {
       grunt: {},
       register: {},
@@ -31,14 +21,14 @@ module.exports = function(grunt) {
       optionsSimple: {
         options: {
           string: 'options',
-          number: 1,
+          number: 1
         }
       },
       optionsDefault: {},
       optionsMerged: {
         options: {
           string: 'options',
-          number: 1,
+          number: 1
         }
       },
       filesCompact: {
@@ -57,6 +47,7 @@ module.exports = function(grunt) {
         ]
       },
       async: {},
+      asyncImmediate: {},
       asyncTrue: {},
       // asyncFalse: {},
       // asyncError: {},
@@ -65,6 +56,17 @@ module.exports = function(grunt) {
       file: {},
       template: {},
       util: {},
+    },
+
+    // Linting
+    jshint: {
+      src: [
+        '*.js',
+        'test/*.js'
+      ],
+      options: {
+        jshintrc: '.jshintrc'
+      }
     },
 
     // Watcher
@@ -82,6 +84,6 @@ module.exports = function(grunt) {
   // Load test bench task
   grunt.loadTasks('test');
 
-  // Default: Run, test, and lint
+  // Default: run, test, and lint
   grunt.registerTask('default', ['testBench', 'nodeunit', 'jshint']);
 };

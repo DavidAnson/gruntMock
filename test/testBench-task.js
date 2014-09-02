@@ -1,7 +1,11 @@
+// A task to exercise the Grunt API and validate gruntMock
+
 'use strict';
 
+// Requires
 var util = require('util');
 
+// Task definition
 module.exports = function(grunt) {
   var self = {};
 
@@ -91,13 +95,23 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done();
+      grunt.log.ok('unreachable');
     }, 1);
+  };
+
+  self._asyncImmediate = function() {
+    var done = this.async();
+    setImmediate(function() {
+      done();
+      grunt.log.ok('unreachable');
+    });
   };
 
   self._asyncTrue = function() {
     var done = this.async();
     setTimeout(function() {
       done(true);
+      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -105,6 +119,7 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done(false);
+      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -112,6 +127,7 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done(new Error('asyncError'));
+      grunt.log.ok('unreachable');
     }, 1);
   };
 

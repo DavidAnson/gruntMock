@@ -1,3 +1,5 @@
+// Unit tests for gruntMock
+
 'use strict';
 
 // Requires
@@ -18,13 +20,16 @@ function testLogs(test, mock, ok, error) {
 }
 
 exports.gruntMockTest = {
+  // Test cases
 
   grunt: function(test) {
     test.expect(4);
     var mock = gruntMock.create({ target: 'grunt' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
-      testLogs(test, mock, ['grunt version=0.1.0, package.name=gruntMock'], []);
+      testLogs(test, mock,
+        ['grunt version=0.1.0, package.name=gruntMock'],
+        []);
       test.done();
     });
   },
@@ -140,12 +145,12 @@ exports.gruntMockTest = {
   },
 
   filesCompact: function(test) {
-    // Unused; see filesArray
+    // Unused; see filesArray test
     test.done();
   },
 
   filesObject: function(test) {
-    // Unused; see filesArray
+    // Unused; see filesArray test
     test.done();
   },
 
@@ -172,6 +177,16 @@ exports.gruntMockTest = {
   async: function(test) {
     test.expect(3);
     var mock = gruntMock.create({ target: 'async' });
+    mock.invoke(testBench, function(err) {
+      test.ok(!err);
+      testLogs(test, mock, [], []);
+      test.done();
+    });
+  },
+
+  asyncImmediate: function(test) {
+    test.expect(3);
+    var mock = gruntMock.create({ target: 'asyncImmediate' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
       testLogs(test, mock, [], []);
@@ -211,9 +226,10 @@ exports.gruntMockTest = {
   },
 
   asyncFatal: function(test) {
-    test.expect(4);
+    test.expect(5);
     var mock = gruntMock.create({ target: 'asyncFatal' });
     mock.invoke(testBench, function(err) {
+      test.ok(err instanceof Error);
       test.equal(err.message, 'asyncFatal');
       testLogs(test, mock,
         [],
