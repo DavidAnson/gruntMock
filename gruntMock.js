@@ -8,17 +8,13 @@
 
 'use strict';
 
+// Requires
 var domain = require('domain');
 var util = require('util');
 
-// Mock implementation
+// Implementation
 var GruntMock = function(target, files, options) {
   var self = this;
-
-  // Parameters
-  self._target = target || '*';
-  self._files = files || [];
-  self._options = options || {};
 
   // Private variables
   self._context = {};
@@ -27,47 +23,71 @@ var GruntMock = function(target, files, options) {
   self.logError = [];
   self.logOk = [];
 
-  // Grunt methods
+  // Grunt registration method
 
   self.task = {
-    registerMultiTask: function(name, info, fn) {
+    registerMultiTask: function(taskName, description, taskFunction) {
       var asyncCalled = false;
+
+      // Handle optional description
+      if (!taskFunction) {
+        taskFunction = description;
+        description = 'Custom multi-task.';
+      }
+
+      // Validate parameters
+      if (!taskName || (typeof(taskName) !== 'string')) {
+        throw new Error('Must provide taskName parameter of type string');
+      }
+      if (!description || (typeof(description) !== 'string')) {
+        throw new Error('Must provide description parameter of type string');
+      }
+      if (!taskFunction || (typeof(taskFunction) !== 'function')) {
+        throw new Error('Must provide taskFunction parameter of type function');
+      }
+
+      // Set up context (the "this" for the task)
       self._context = {
-        name: name,
-        target: self._target,
-        nameArgs: name + ':' + self._target,
-        files: self._files,
+        name: taskName,
+        target: target,
+        nameArgs: taskName + ':' + target,
+        args: [],
+        errorCount: 0,
+        files: files,
         filesSrc: [],
+        flags: {},
         options: function(defaults) {
+          // Override defaults with options
           var result = {};
           Object.keys(defaults || {}).forEach(function(key) {
             result[key] = defaults[key];
           });
-          Object.keys(self._options).forEach(function(key) {
-            result[key] = self._options[key];
+          Object.keys(options).forEach(function(key) {
+            result[key] = options[key];
           });
           return result;
         },
         async: function() {
+          // Return async callback
           asyncCalled = true;
           return function(result) {
             var failed = (false === result) || (result instanceof Error);
-            throw failed ? result : self;
+            throw failed ? result : self; // self is a sentinel value; see below
           };
-        },
-        errorCount: 0,
-        args: [],
-        flags: {}
+        }
       };
-      self._files.forEach(function(item) {
+
+      // Pouplate filesSrc from files
+      files.forEach(function(item) {
         (item.src || []).forEach(function(file) {
           self._context.filesSrc.push(file);
         });
       });
-      // The initial call to registerMultiTask happens during the parse of a task function's body;
-      // defer calling back into the task so the rest of the function will be processed
+
+      // Initial call to registerMultiTask happens during the parse of a task function's
+      // body; defer calling back into it until the rest of the function has been parsed.
       process.nextTick(function() {
-        fn.call(self._context);
+        taskFunction.call(self._context);
         if (!asyncCalled) {
           // Throw (a sentinel value) for unified handling of task completion (below in invoke)
           throw self;
@@ -76,10 +96,9 @@ var GruntMock = function(target, files, options) {
     }
   };
 
+  // Grunt log methods
+
   self.log = {
-    debug: function(msg) {
-      self.logOk.push(msg + '');
-    },
     error: function(msg) {
       self.logError.push((undefined === msg ? 'ERROR' : msg) + '');
       self._context.errorCount++;
@@ -91,39 +110,35 @@ var GruntMock = function(target, files, options) {
     ok: function(msg) {
       self.logOk.push((undefined === msg ? 'OK' : msg) + '');
     },
-    oklns: function(msg) {
-      self.logOk.push(msg + '');
-    },
-    subhead: function(msg) {
-      self.logOk.push(msg + '');
-    },
     write: function(msg) {
       self.logOk.push(msg + '');
     },
-    writeln: function(msg) {
-      self.logOk.push(msg + '');
-    },
     writeflags: function(obj, prefix) {
-      // Use util.inspect as a simple, external implementation of writeflags
+      // Use util.inspect as a simple implementation of writeflags
       self.logOk.push((prefix || 'Flags') + ': ' + (0 < Object.keys(obj).length ? util.inspect(obj) : '(none)'));
     }
   };
-  // Map log to some of its aliases
+  self.log.debug = self.log.write;
+  self.log.oklns = self.log.write;
+  self.log.subhead = self.log.write;
+  self.log.writeln = self.log.write;
+  // Map grunt.log to some of its aliases
   self.log.verbose = self.log;
   self.log.notverbose = self.log;
   self.verbose = self.log;
   self.verbose.or = self.log;
 
+  // Grunt fail methods
+
   self.fail = {
-    warn: function(error) {
-      self.logError.push(error);
-      throw new Error(error);
-    },
     fatal: function(error) {
       self.logError.push(error);
       throw new Error(error);
     }
   };
+  self.fail.warn = self.fail.fatal;
+
+  // Grunt package information
 
   self.package = require('./package.json');
 
@@ -144,9 +159,14 @@ var GruntMock = function(target, files, options) {
     self.log[name] = grunt.log[name];
   });
 
-  // Entry point
-
+  /**
+   * Mocks Grunt and invokes a multi-task.
+   *
+   * @param {Function} task A Grunt multi-task.
+   * @param {Function} callback A callback(err) function.
+   */
   self.invoke = function(task, callback) {
+    // Validate parameters
     if (!task || (typeof(task) !== 'function')) {
       throw new Error('Must provide task parameter of type function');
     }
@@ -154,17 +174,20 @@ var GruntMock = function(target, files, options) {
       throw new Error('Must provide callback parameter of type function');
     }
 
+    // Create a domain for control over exception handling
     var d = domain.create();
     d.on('error', function(err) {
       d.dispose();
-      if (err !== self) {
-        callback(err);
-      } else {
+      if (err === self) {
+        // Success
         callback();
+      } else {
+        // Pass error context
+        callback(err);
       }
     });
     d.run(function() {
-      // Want to include synchronous exceptions in the domain, so use nextTick
+      // Use nextTick to include synchronous exceptions in the domain
       process.nextTick(function() {
         task(self);
       });
@@ -172,10 +195,16 @@ var GruntMock = function(target, files, options) {
   };
 };
 
-// Factory function
+/**
+ * Creates an instance of GruntMock.
+ *
+ * @param {Object} config Configuration object (target, files, options).
+ * @return {GruntMock} A new instance of GruntMock.
+ */
 module.exports.create = function(config) {
+  config = config || {};
   return new GruntMock(
-    config.target,
-    config.files,
-    config.options);
+    config.target || '*',
+    config.files || [],
+    config.options || {});
 };

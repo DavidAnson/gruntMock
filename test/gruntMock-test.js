@@ -20,6 +20,7 @@ function testLogs(test, mock, ok, error) {
 }
 
 exports.gruntMockTest = {
+
   // Test cases
 
   grunt: function(test) {
@@ -284,5 +285,82 @@ exports.gruntMockTest = {
         []);
       test.done();
     });
+  },
+
+  // Parameter validation
+
+  noTaskName: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask();
+      }, function(err) {
+      test.equal(err.message, 'Must provide taskName parameter of type string');
+      test.done();
+    });
+  },
+
+  noTaskFunction: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask('noTaskFunction', 'description');
+      }, function(err) {
+      test.equal(err.message, 'Must provide taskFunction parameter of type function');
+      test.done();
+    });
+  },
+
+  noDescription: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask('noDescription');
+      }, function(err) {
+      test.equal(err.message, 'Must provide taskFunction parameter of type function');
+      test.done();
+    });
+  },
+
+  nullDescription: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask('nullDescription', null, function() {});
+      }, function(err) {
+      test.equal(err.message, 'Must provide description parameter of type string');
+      test.done();
+    });
+  },
+
+  omitDescription: function(test) {
+    test.expect(2);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask('omitDescription', function() {
+          test.ok(true);
+        });
+      }, function(err) {
+      test.ok(!err);
+      test.done();
+    });
+  },
+
+  noInvokeTask: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    test.throws(function() {
+      mock.invoke(null, function() {});
+    }, /Must provide task parameter of type function/);
+    test.done();
+  },
+
+  noInvokeCallback: function(test) {
+    test.expect(1);
+    var mock = gruntMock.create();
+    test.throws(function() {
+      mock.invoke(function() {});
+    }, /Must provide callback parameter of type function/);
+    test.done();
   },
 };

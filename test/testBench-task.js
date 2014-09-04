@@ -11,7 +11,11 @@ module.exports = function(grunt) {
 
   // Register the task with Grunt
   grunt.registerMultiTask('testBench', 'Provides an environment for testing gruntMock.', function() {
-    self['_' + this.target].call(this);
+    var method = self['_' + this.target];
+    if (!method) {
+      throw new Error('Unsupported target: ' + this.target);
+    }
+    method.call(this);
   });
 
   /* Methods to exercise the Grunt API */
