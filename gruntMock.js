@@ -18,7 +18,8 @@ var GruntMock = function(target, files, options) {
   var self = this;
 
   // Private variables
-  self._context = {};
+  var _context = {};
+  var _success = {};
 
   // Public variables
   self.logError = [];
@@ -48,7 +49,7 @@ var GruntMock = function(target, files, options) {
       }
 
       // Set up context (the "this" for the task)
-      self._context = {
+      _context = {
         name: taskName,
         target: target,
         nameArgs: taskName + ':' + target,
@@ -73,7 +74,7 @@ var GruntMock = function(target, files, options) {
           asyncCalled = true;
           return function(result) {
             var failed = (false === result) || (result instanceof Error);
-            throw failed ? result : self; // self is a sentinel value; see below
+            throw failed ? result : _success;
           };
         }
       };
@@ -81,17 +82,17 @@ var GruntMock = function(target, files, options) {
       // Pouplate filesSrc from files
       files.forEach(function(item) {
         (item.src || []).forEach(function(file) {
-          self._context.filesSrc.push(file);
+          _context.filesSrc.push(file);
         });
       });
 
       // Initial call to registerMultiTask happens during the parse of a task function's
       // body; defer calling back into it until the rest of the function has been parsed.
       process.nextTick(function() {
-        taskFunction.call(self._context);
+        taskFunction.call(_context);
         if (!asyncCalled) {
-          // Throw (a sentinel value) for unified handling of task completion (below in invoke)
-          throw self;
+          // Throw for unified handling of task completion (below in invoke)
+          throw _success;
         }
       });
     }
@@ -102,11 +103,11 @@ var GruntMock = function(target, files, options) {
   self.log = {
     error: function(msg) {
       self.logError.push((undefined === msg ? 'ERROR' : msg) + '');
-      self._context.errorCount++;
+      _context.errorCount++;
     },
     errorlns: function(msg) {
       self.logError.push(msg + '');
-      self._context.errorCount++;
+      _context.errorCount++;
     },
     ok: function(msg) {
       self.logOk.push((undefined === msg ? 'OK' : msg) + '');
@@ -169,7 +170,7 @@ var GruntMock = function(target, files, options) {
    * Mocks Grunt and invokes a multi-task.
    *
    * @param {Function} task A Grunt multi-task.
-   * @param {Function} callback A callback(err) function.
+   * @param {Function} callback A callback(err, mock) function.
    */
   self.invoke = function(task, callback) {
     // Validate parameters
@@ -184,13 +185,11 @@ var GruntMock = function(target, files, options) {
     var d = domain.create();
     d.on('error', function(err) {
       d.dispose();
-      if (err === self) {
-        // Success
-        callback();
-      } else {
-        // Pass error context
-        callback(err);
+      if (err === _success) {
+        // Success, pass null for err
+        err = null;
       }
+      callback(err, self);
     });
     d.run(function() {
       // Use nextTick to include synchronous exceptions in the domain

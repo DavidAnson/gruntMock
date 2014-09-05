@@ -221,7 +221,7 @@ exports.gruntMockTest = {
     var mock = gruntMock.create({ target: 'asyncError' });
     mock.invoke(testBench, function(err) {
       test.ok(err instanceof Error);
-      test.equal('asyncError', err.message);
+      test.equal(err.message, 'asyncError');
       testLogs(test, mock, [], []);
       test.done();
     });
@@ -296,9 +296,9 @@ exports.gruntMockTest = {
     mock.invoke(function(grunt) {
         grunt.registerMultiTask();
       }, function(err) {
-      test.equal(err.message, 'Must provide taskName parameter of type string');
-      test.done();
-    });
+        test.equal(err.message, 'Must provide taskName parameter of type string');
+        test.done();
+      });
   },
 
   noTaskFunction: function(test) {
@@ -307,9 +307,9 @@ exports.gruntMockTest = {
     mock.invoke(function(grunt) {
         grunt.registerMultiTask('noTaskFunction', 'description');
       }, function(err) {
-      test.equal(err.message, 'Must provide taskFunction parameter of type function');
-      test.done();
-    });
+        test.equal(err.message, 'Must provide taskFunction parameter of type function');
+        test.done();
+      });
   },
 
   noDescription: function(test) {
@@ -318,9 +318,9 @@ exports.gruntMockTest = {
     mock.invoke(function(grunt) {
         grunt.registerMultiTask('noDescription');
       }, function(err) {
-      test.equal(err.message, 'Must provide taskFunction parameter of type function');
-      test.done();
-    });
+        test.equal(err.message, 'Must provide taskFunction parameter of type function');
+        test.done();
+      });
   },
 
   nullDescription: function(test) {
@@ -329,9 +329,9 @@ exports.gruntMockTest = {
     mock.invoke(function(grunt) {
         grunt.registerMultiTask('nullDescription', null, function() {});
       }, function(err) {
-      test.equal(err.message, 'Must provide description parameter of type string');
-      test.done();
-    });
+        test.equal(err.message, 'Must provide description parameter of type string');
+        test.done();
+      });
   },
 
   omitDescription: function(test) {
@@ -342,9 +342,9 @@ exports.gruntMockTest = {
           test.ok(true);
         });
       }, function(err) {
-      test.ok(!err);
-      test.done();
-    });
+        test.ok(!err);
+        test.done();
+      });
   },
 
   noInvokeTask: function(test) {
@@ -363,5 +363,32 @@ exports.gruntMockTest = {
       mock.invoke(function() {});
     }, /Must provide callback parameter of type function/);
     test.done();
+  },
+
+  // Callback parameters
+
+  callbackSuccess: function(test) {
+    test.expect(2);
+    var mock = gruntMock.create();
+    mock.invoke(function(grunt) {
+        grunt.registerMultiTask('callbackSuccess', function() {});
+      }, function(err, moc) {
+        test.equal(err, null);
+        test.equal(moc, mock);
+        test.done();
+      });
+  },
+
+  callbackFailure: function(test) {
+    test.expect(2);
+    var mock = gruntMock.create();
+    var error = new Error();
+    mock.invoke(function() {
+        throw error;
+      }, function(err, moc) {
+        test.equal(err, error);
+        test.equal(moc, mock);
+        test.done();
+      });
   },
 };
