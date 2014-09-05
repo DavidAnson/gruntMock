@@ -22,7 +22,15 @@ var GruntMock = function(target, files, options) {
   var _success = {};
 
   // Public variables
+
+  /**
+   * Array of all error messages a task logs.
+   */
   self.logError = [];
+
+  /**
+   * Array of all non-error messages a task logs.
+   */
   self.logOk = [];
 
   // Grunt registration method

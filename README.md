@@ -11,7 +11,39 @@ gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that
 ## Example
 
 ```
-...
+var gruntMock = require('../gruntMock.js');
+var example = require('./example-task.js');
+
+exports.exampleTest = {
+
+  pass: function(test) {
+    test.expect(4);
+    var mock = gruntMock.create({
+      target: 'pass',
+      files: [
+        { src: ['unused.txt'] }
+      ],
+      options: { str: 'string', num: 1 }
+    });
+    mock.invoke(example, function(err) {
+      test.ok(!err);
+      test.equal(mock.logOk.length, 1);
+      test.equal(mock.logOk[0], 'pass');
+      test.equal(mock.logError.length, 0);
+      test.done();
+    });
+  },
+
+  fail: function(test) {
+    test.expect(2);
+    var mock = gruntMock.create({ target: 'fail' });
+    mock.invoke(example, function(err) {
+      test.ok(err);
+      test.equal(err.message, 'fail');
+      test.done();
+    });
+  }
+};
 ```
 
 ## Mocking
@@ -21,10 +53,31 @@ Some of Grunt's APIs are self-contained and don't need special handling (ex: `gr
 ## Interface
 
 ```
-var gruntMock = require('gruntMock');
-var mock = gruntMock.create({...});
-mock.invoke(callback);
-mock.okLogs, ...
+/**
+ * Creates an instance of GruntMock.
+ *
+ * @param {Object} config Configuration object (target, files, options).
+ * @return {GruntMock} A new instance of GruntMock.
+ */
+var gruntMock = GruntMock.create(config)
+
+/**
+ * Mocks Grunt and invokes a multi-task.
+ *
+ * @param {Function} task A Grunt multi-task.
+ * @param {Function} callback A callback(err, mock) function.
+ */
+gruntMock.invoke(task, callback)
+
+/**
+ * Array of all error messages a task logs.
+ */
+gruntMock.logError
+
+/**
+ * Array of all non-error messages a task logs.
+ */
+gruntMock.logOk
 ```
 
 ## Supported APIs
@@ -51,7 +104,7 @@ mock.okLogs, ...
 
 ### [grunt.log](http://gruntjs.com/api/grunt.log)
 
-* All methods
+* All methods (helpers via pass-through)
 
 ### [grunt.option](http://gruntjs.com/api/grunt.option)
 
@@ -88,6 +141,7 @@ mock.okLogs, ...
 * The format of the files input is [Grunt's array format](http://gruntjs.com/configuring-tasks#files-array-format). [Globbing](http://gruntjs.com/configuring-tasks#globbing-patterns) is not handled by gruntMock because it is outside the scope of testing a Grunt task. Any test input can be provided un-globbed for the same effect.
 * gruntMock unconditionally captures and reports verbose/debug output alongside normal log output. Differentiating among normal/verbose/debug output is not currently supported.
 * Grunt's `--force` option is not supported; a call to `grunt.warn.fatal` or an unhandled exception always ends the task.
+* `this.args` and `this.flags` are unsupported and always empty.
 
 ## License
 

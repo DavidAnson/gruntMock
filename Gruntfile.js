@@ -58,6 +58,11 @@ module.exports = function(grunt) {
       util: {},
     },
 
+    // Example
+    example: {
+      pass: {}
+    },
+
     // Linting
     jshint: {
       src: [
@@ -85,5 +90,5 @@ module.exports = function(grunt) {
   grunt.loadTasks('test');
 
   // Default: run, test, and lint
-  grunt.registerTask('default', ['testBench', 'nodeunit', 'jshint']);
+  grunt.registerTask('default', ['testBench', 'example', 'nodeunit', 'jshint']);
 };
