@@ -56,6 +56,12 @@ module.exports = function(grunt) {
     grunt.log.ok(grunt.log.uncolor(grunt.log.wordlist(['grunt', 'log', 'wordlist'])));
     grunt.log.ok(grunt.log.wraptext(10, 'grunt log wraptext'));
     grunt.log.ok(grunt.log.table([1, 2, 3, 4, 5], ['1', '2', '3', '4', '5']));
+    grunt.log.fail('log.fail');
+    grunt.log.header('log.header');
+    grunt.log.success('log.success');
+    grunt.log.warn('log.warn');
+    grunt.log.writelns('log.writelns');
+    grunt.log.writetableln([1, 2, 3, 4], ['1', '2', '3', '4']);
     grunt.log.ok(this.errorCount);
   };
 
