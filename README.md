@@ -4,14 +4,14 @@
 
 ## Overview
 
-Some [Grunt](http://gruntjs.com/) tasks are thin wrappers over functionality that's already well tested (ex: [grunt-contrib-jshint](https://www.npmjs.org/package/grunt-contrib-jshint)) and don't need much testing themselves. For tasks like that, gruntMock isn't super relevant. But for tasks that offer custom functionality, deserve to be exercised as by Grunt, or need their output verified, gruntMock may be useful.
+Some [Grunt](http://gruntjs.com/) tasks are thin wrappers over functionality that's already well tested (ex: [grunt-contrib-jshint](https://www.npmjs.org/package/grunt-contrib-jshint)). Other Grunt tasks offer custom functionality, specialized behavior, or need their output to be verified. gruntMock is targeted at the second set and offers a way to validate the complete, end-to-end lifecycle of a Grunt multi-task.
 
-gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that simulates the Grunt task runner for multi-tasks and can easily be integrated into a unit testing environment like [Nodeunit](https://www.npmjs.org/package/nodeunit). gruntMock calls into tasks the same way Grunt does and exposes (almost) the same set of APIs. After providing the input to the task, gruntMock runs it and captures the output so you can assert correctness. Task success and failure scenarios are unified, so it is easy to write positive and negative tests.
+gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that simulates the Grunt task runner for multi-tasks and can easily be integrated into a unit testing environment (such as [Nodeunit](https://www.npmjs.org/package/nodeunit)). gruntMock calls into tasks the same way Grunt does and exposes (almost) the same set of APIs. After providing input to the task, gruntMock runs and captures its output so tests can verify expected behavior. Task success and failure are unified, so it's easy to write positive and negative tests.
 
 ## Example
 
 ```
-var gruntMock = require('../gruntMock.js');
+var gruntMock = require('gruntMock');
 var example = require('./example-task.js');
 
 exports.exampleTest = {
@@ -48,7 +48,7 @@ exports.exampleTest = {
 
 ## Mocking
 
-Some of Grunt's APIs are self-contained and don't need special handling (ex: `grunt.file`), so gruntMock exposes the original implementation as-is. Other APIs need to be captured or redirected for test purposes (ex: `grunt.log`), so gruntMock returns a custom implementation. Other APIs are complicated or uncommon enough that gruntMock doesn't try to support them at all (ex: `grunt.task`).
+Some of Grunt's APIs are self-contained and don't need special handling (ex: `grunt.file`), so gruntMock exposes the original implementation via a pass-through. Other APIs need to be captured or redirected for test purposes (ex: `grunt.log`), so gruntMock returns a custom implementation. Other APIs are complicated or uncommon enough that gruntMock doesn't try to support them at all (ex: `grunt.task`).
 
 ## Interface
 
@@ -104,7 +104,7 @@ gruntMock.logOk
 
 ### [grunt.log](http://gruntjs.com/api/grunt.log)
 
-* All methods (helpers via pass-through)
+* All methods (with helpers via pass-through)
 
 ### [grunt.option](http://gruntjs.com/api/grunt.option)
 
@@ -124,25 +124,30 @@ gruntMock.logOk
 
 ### [Inside Tasks](http://gruntjs.com/api/inside-tasks)
 
+* `args` (see note below)
 * `async`
 * `errorCount`
-* `files` (see "Notes" below)
+* `files` (see note below)
 * `filesSrc`
+* `flags` (see note below)
 * `name`
 * `nameArgs`
 * `options`
 * `target`
-* `args` (always empty)
-* `flags` (always empty)
 
 ## Notes
 
-* gruntMock supports both synchronous and asynchronous task execution for testing. gruntMock's invoke method always calls the provided callback asynchronously.
-* The format of the files input is [Grunt's array format](http://gruntjs.com/configuring-tasks#files-array-format). [Globbing](http://gruntjs.com/configuring-tasks#globbing-patterns) is not handled by gruntMock because it is outside the scope of testing a Grunt task. Any test input can be provided un-globbed for the same effect.
-* gruntMock unconditionally captures and reports verbose/debug output alongside normal log output. Differentiating among normal/verbose/debug output is not currently supported.
+* gruntMock supports both synchronous and asynchronous task execution. gruntMock's invoke method always calls its callback asynchronously.
+* The `files` input uses Grunt's [array format](http://gruntjs.com/configuring-tasks#files-array-format). [Globbing](http://gruntjs.com/configuring-tasks#globbing-patterns) is not handled by gruntMock because it's outside the scope of testing a Grunt task. Test input can be provided un-globbed for the same effect.
+* Although `grunt.log.warn` behaves like `grunt.log.error`, it does not increment `this.errorCount`, so its output is logged to `gruntMock.logOk`.
+* gruntMock unconditionally captures and reports verbose/debug output along with normal log output. Differentiating among normal/verbose/debug output is not currently supported.
 * Grunt's `--force` option is not supported; a call to `grunt.warn.fatal` or an unhandled exception always ends the task.
-* `this.args` and `this.flags` are unsupported and always empty.
+* `this.args` and `this.flags` are unused and always empty.
 
 ## License
 
 [MIT](LICENSE)
+
+## Releases
+
+* 0.1.0 - Initial release.

@@ -87,7 +87,7 @@ var GruntMock = function(target, files, options) {
         }
       };
 
-      // Pouplate filesSrc from files
+      // Populate filesSrc from files
       files.forEach(function(item) {
         (item.src || []).forEach(function(file) {
           _context.filesSrc.push(file);
