@@ -6,7 +6,7 @@
 
 Some [Grunt](http://gruntjs.com/) tasks are thin wrappers over functionality that's already well tested (ex: [grunt-contrib-jshint](https://www.npmjs.org/package/grunt-contrib-jshint)). Other Grunt tasks offer custom functionality, specialized behavior, or need their output to be verified. gruntMock is targeted at the second set and offers a way to validate the complete, end-to-end lifecycle of a Grunt multi-task.
 
-gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that simulates the Grunt task runner for multi-tasks and can easily be integrated into a unit testing environment (such as [Nodeunit](https://www.npmjs.org/package/nodeunit)). gruntMock calls into tasks the same way Grunt does and exposes (almost) the same set of APIs. After providing input to the task, gruntMock runs and captures its output so tests can verify expected behavior. Task success and failure are unified, so it's easy to write positive and negative tests.
+gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that simulates the Grunt task runner for multi-tasks and can easily be integrated into a unit testing environment such as [Nodeunit](https://www.npmjs.org/package/nodeunit). gruntMock invokes tasks the same way Grunt does and exposes (almost) the same set of APIs. After providing input to a task, gruntMock runs and captures its output so tests can verify expected behavior. Task success and failure are unified, so it's easy to write positive and negative tests.
 
 ## Example
 
@@ -48,7 +48,7 @@ exports.exampleTest = {
 
 ## Mocking
 
-Some of Grunt's APIs are self-contained and don't need special handling (ex: `grunt.file`), so gruntMock exposes the original implementation via a pass-through. Other APIs need to be captured or redirected for test purposes (ex: `grunt.log`), so gruntMock returns a custom implementation. Other APIs are complicated or uncommon enough that gruntMock doesn't try to support them at all (ex: `grunt.task`).
+Some of Grunt's APIs are self-contained and don't need special handling (ex: `grunt.file`), so gruntMock exposes the original implementation via a pass-through. Other APIs need to be captured or redirected for test purposes (ex: `grunt.log`), so gruntMock returns a custom implementation. Other APIs are complicated or uncommon enough that gruntMock doesn't try to support them (ex: `grunt.task`).
 
 ## Interface
 
