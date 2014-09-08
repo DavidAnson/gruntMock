@@ -29,7 +29,7 @@ exports.gruntMockTest = {
     mock.invoke(testBench, function(err) {
       test.ok(!err);
       testLogs(test, mock,
-        ['grunt version=0.1.0, package.name=gruntMock'],
+        ['grunt version=0.1.1, package.name=gruntmock'],
         []);
       test.done();
     });
@@ -258,7 +258,7 @@ exports.gruntMockTest = {
     mock.invoke(testBench, function(err) {
       test.ok(!err);
       testLogs(test, mock,
-        ['package.json: exists=true, name=gruntMock'],
+        ['package.json: exists=true, name=gruntmock'],
         []);
       test.done();
     });

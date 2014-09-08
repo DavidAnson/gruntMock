@@ -11,7 +11,7 @@ gruntMock is simple [mock object](http://en.wikipedia.org/wiki/Mock_object) that
 ## Example
 
 ```
-var gruntMock = require('gruntMock');
+var gruntMock = require('gruntmock');
 var example = require('./example-task.js');
 
 exports.exampleTest = {
@@ -151,3 +151,4 @@ gruntMock.logOk
 ## Releases
 
 * 0.1.0 - Initial release.
+* 0.1.1 - Lower-case package name per npm policy.
