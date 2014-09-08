@@ -1,5 +1,5 @@
 {
-  "name": "gruntMock",
+  "name": "gruntmock",
   "description": "A simple mock for testing Grunt multi-tasks.",
   "version": "0.1.0",
   "homepage": "https://github.com/DavidAnson/gruntMock",
