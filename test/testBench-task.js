@@ -59,6 +59,7 @@ module.exports = function(grunt) {
     grunt.log.fail('log.fail');
     grunt.log.header('log.header');
     grunt.log.success('log.success');
+    grunt.log.warn();
     grunt.log.warn('log.warn');
     grunt.log.writelns('log.writelns');
     grunt.log.writetableln([1, 2, 3, 4], ['1', '2', '3', '4']);

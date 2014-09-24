@@ -48,7 +48,7 @@ exports.gruntMockTest = {
   },
 
   log: function(test) {
-    test.expect(30);
+    test.expect(31);
     var mock = gruntMock.create({ target: 'log' });
     mock.invoke(testBench, function(err) {
       test.ok(!err);
@@ -56,7 +56,7 @@ exports.gruntMockTest = {
         ['log.write', 'log.writeln', 'OK', '0', 'log.ok', 'log.oklns', 'log.debug', 'log.subhead',
          'log.writeflags: { string: \'string\', number: 10 }', 'log.verbose.ok', 'log.notverbose.ok',
          'verbose.ok', 'verbose.or.ok', 'grunt, log, wordlist', 'grunt log\nwraptext', '12 3  4   5    ',
-         'log.fail', 'log.header', 'log.success', 'log.warn', 'log.writelns', '12 3  4   ', '4'],
+         'log.fail', 'log.header', 'log.success', 'ERROR', 'log.warn', 'log.writelns', '12 3  4   ', '4'],
         ['ERROR', 'false', 'log.error', 'log.errorlns']);
       test.done();
     });
@@ -157,12 +157,13 @@ exports.gruntMockTest = {
   },
 
   filesArray: function(test) {
-    test.expect(6);
+    test.expect(7);
     var mock = gruntMock.create({
       target: 'filesArray',
       files: [
         { src: ['a.txt', 'b.txt'] },
         { src: ['c.txt'], dest: 'd.txt', extra: 1 },
+        { nosrc: ['none'] }
       ]
     });
     mock.invoke(testBench, function(err) {
@@ -170,6 +171,7 @@ exports.gruntMockTest = {
       testLogs(test, mock,
         ['Item: { src: [ \'a.txt\', \'b.txt\' ] }',
          'Item: { src: [ \'c.txt\' ], dest: \'d.txt\', extra: 1 }',
+         'Item: { nosrc: [ \'none\' ] }',
          'a.txt,b.txt,c.txt'],
         []);
       test.done();

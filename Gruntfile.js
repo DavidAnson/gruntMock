@@ -43,7 +43,8 @@ module.exports = function(grunt) {
       filesArray: {
         files: [
           { src: ['*.js'], dest: 'root.js', extra: 0 },
-          { src: ['test/*.js'], dest: 'test.js', extra: 1 }
+          { src: ['test/*.js'], dest: 'test.js', extra: 1 },
+          { nosrc: ['none'] }
         ]
       },
       async: {},
