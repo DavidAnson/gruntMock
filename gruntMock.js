@@ -14,7 +14,7 @@ var util = require('util');
 var grunt = require('grunt');
 
 // Implementation
-var GruntMock = function(target, files, options) {
+var GruntMock = function(target, files, options, data) {
   var self = this;
 
   // Private variables
@@ -66,6 +66,7 @@ var GruntMock = function(target, files, options) {
         files: files,
         filesSrc: [],
         flags: {},
+        data: data,
         options: function(defaults) {
           // Override defaults with options
           var result = {};
@@ -211,7 +212,7 @@ var GruntMock = function(target, files, options) {
 /**
  * Creates an instance of GruntMock.
  *
- * @param {Object} config Configuration object (target, files, options).
+ * @param {Object} config Configuration object (target, files, options, data).
  * @return {GruntMock} A new instance of GruntMock.
  */
 module.exports.create = function(config) {
@@ -219,5 +220,6 @@ module.exports.create = function(config) {
   return new GruntMock(
     config.target || '*',
     config.files || [],
-    config.options || {});
+    config.options || {},
+    config.data || {});
 };

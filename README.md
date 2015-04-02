@@ -56,7 +56,7 @@ Some of Grunt's APIs are self-contained and don't need special handling (ex: `gr
 /**
  * Creates an instance of GruntMock.
  *
- * @param {Object} config Configuration object (target, files, options).
+ * @param {Object} config Configuration object (target, files, options, data).
  * @return {GruntMock} A new instance of GruntMock.
  */
 var gruntMock = GruntMock.create(config)
@@ -134,6 +134,7 @@ gruntMock.logOk
 * `nameArgs`
 * `options`
 * `target`
+* `data`
 
 ## Notes
 
