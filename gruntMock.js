@@ -193,7 +193,6 @@ var GruntMock = function(target, files, options, data) {
     // Create a domain for control over exception handling
     var d = domain.create();
     d.on('error', function(err) {
-      d.dispose();
       if (err === _success) {
         // Success, pass null for err
         err = null;
