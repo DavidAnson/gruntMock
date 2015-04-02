@@ -56,12 +56,19 @@ module.exports = function(grunt) {
       event: {},
       file: {},
       template: {},
-      util: {},
+      util: {}
     },
 
     // Example
     example: {
       pass: {}
+    },
+
+    // Test data
+    testData: {
+      pass: {
+        who: 'me'
+      }
     },
 
     // Linting
@@ -86,10 +93,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  
+
   // Load test bench task
   grunt.loadTasks('test');
 
   // Default: run, test, and lint
-  grunt.registerTask('default', ['testBench', 'example', 'nodeunit', 'jshint']);
+  grunt.registerTask('default', ['testBench', 'example', 'testData', 'nodeunit', 'jshint']);
 };
