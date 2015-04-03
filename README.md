@@ -2,6 +2,12 @@
 
 > A simple mock for testing Grunt multi-tasks.
 
+[![npm version][npm-image]][npm-url]
+[![GitHub tag][github-tag-image]][github-tag-url]
+[![Build status][travis-image]][travis-url]
+[![Coverage][coveralls-image]][coveralls-url]
+[![License][license-image]][license-url]
+
 ## Overview
 
 Some [Grunt](http://gruntjs.com/) tasks are thin wrappers over functionality that's already well tested (ex: [grunt-contrib-jshint](https://www.npmjs.org/package/grunt-contrib-jshint)). Other Grunt tasks offer custom functionality, specialized behavior, or need their output to be verified. gruntMock is targeted at the second set and offers a way to validate the complete, end-to-end lifecycle of a Grunt multi-task.
@@ -153,3 +159,14 @@ gruntMock.logOk
 
 * 0.1.0 - Initial release.
 * 0.1.1 - Lower-case package name per npm policy.
+
+[npm-image]: https://img.shields.io/npm/v/gruntmock.svg
+[npm-url]: https://www.npmjs.com/package/gruntmock
+[github-tag-image]: https://img.shields.io/github/tag/DavidAnson/gruntMock.svg
+[github-tag-url]: https://github.com/DavidAnson/gruntMock
+[travis-image]: https://img.shields.io/travis/DavidAnson/gruntMock.svg
+[travis-url]: https://travis-ci.org/DavidAnson/gruntMock
+[coveralls-image]: https://img.shields.io/coveralls/DavidAnson/gruntMock.svg
+[coveralls-url]: https://coveralls.io/r/DavidAnson/gruntMock
+[license-image]: https://img.shields.io/npm/l/gruntmock.svg
+[license-url]: http://opensource.org/licenses/MIT
