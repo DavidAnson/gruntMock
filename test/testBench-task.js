@@ -68,12 +68,12 @@ module.exports = function(grunt) {
 
   self._failWarn = function() {
     grunt.warn('fail.warn');
-    grunt.log.ok('unreachable');
+    throw new Error('unreachable');
   };
 
   self._failFatal = function() {
     grunt.fatal('fail.fatal');
-    grunt.log.ok('unreachable');
+    throw new Error('unreachable');
   };
 
   self._optionsEmpty = function() {
@@ -106,7 +106,6 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done();
-      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -114,7 +113,6 @@ module.exports = function(grunt) {
     var done = this.async();
     setImmediate(function() {
       done();
-      grunt.log.ok('unreachable');
     });
   };
 
@@ -122,7 +120,6 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done(true);
-      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -130,7 +127,6 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done(false);
-      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -138,7 +134,6 @@ module.exports = function(grunt) {
     var done = this.async();
     setTimeout(function() {
       done(new Error('asyncError'));
-      grunt.log.ok('unreachable');
     }, 1);
   };
 
@@ -146,7 +141,7 @@ module.exports = function(grunt) {
     this.async();
     setTimeout(function() {
       grunt.fatal('asyncFatal');
-      grunt.log.ok('unreachable');
+      throw new Error('unreachable');
     }, 1);
   };
 
