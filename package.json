@@ -17,15 +17,17 @@
   },
   "main": "gruntMock.js",
   "scripts": {
-    "test": "grunt nodeunit"
+    "test": "grunt nodeunit",
+    "test-cover": "istanbul cover node_modules/grunt-contrib-nodeunit/node_modules/nodeunit/bin/nodeunit"
   },
   "dependencies": {
     "grunt": "~0.4.5"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-jshint": "^0.11.1",
     "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "istanbul": "^0.3.8"
   },
   "peerDependencies": {
     "grunt": "~0.4.5"
