@@ -29,7 +29,7 @@ exports.gruntMockTest = {
     mock.invoke(testBench, function(err) {
       test.ok(!err);
       testLogs(test, mock,
-        ['grunt version=0.1.1, package.name=gruntmock'],
+        ['grunt version=0.2.0, package.name=gruntmock'],
         []);
       test.done();
     });

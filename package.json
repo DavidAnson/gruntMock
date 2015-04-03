@@ -1,7 +1,7 @@
 {
   "name": "gruntmock",
   "description": "A simple mock for testing Grunt multi-tasks.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "homepage": "https://github.com/DavidAnson/gruntMock",
   "author": "David Anson (http://dlaa.me/)",
   "repository": {

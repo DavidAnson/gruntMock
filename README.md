@@ -132,6 +132,7 @@ gruntMock.logOk
 
 * `args` (see note below)
 * `async`
+* `data`
 * `errorCount`
 * `files` (see note below)
 * `filesSrc`
@@ -140,7 +141,6 @@ gruntMock.logOk
 * `nameArgs`
 * `options`
 * `target`
-* `data`
 
 ## Notes
 
@@ -159,6 +159,7 @@ gruntMock.logOk
 
 * 0.1.0 - Initial release.
 * 0.1.1 - Lower-case package name per npm policy.
+* 0.2.0 - Add support for this.data inside a task.
 
 [npm-image]: https://img.shields.io/npm/v/gruntmock.svg
 [npm-url]: https://www.npmjs.com/package/gruntmock
