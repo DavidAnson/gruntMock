@@ -2,7 +2,7 @@
  * gruntMock
  * https://github.com/DavidAnson/gruntMock
  *
- * Copyright (c) 2014 David Anson
+ * Copyright (c) 2014-2016 David Anson
  * Licensed under the MIT license.
  */
 
