@@ -21,7 +21,7 @@
     "test-cover": "istanbul cover node_modules/grunt-contrib-nodeunit/node_modules/nodeunit/bin/nodeunit"
   },
   "dependencies": {
-    "grunt": "~0.4.5"
+    "grunt": ">=0.4.5"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.11.1",
@@ -30,7 +30,7 @@
     "istanbul": "^0.3.8"
   },
   "peerDependencies": {
-    "grunt": "~0.4.5"
+    "grunt": ">=0.4.5"
   },
   "keywords": [
     "grunt",
