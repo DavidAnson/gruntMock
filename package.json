@@ -18,7 +18,7 @@
   "main": "gruntMock.js",
   "scripts": {
     "test": "grunt nodeunit",
-    "test-cover": "istanbul cover node_modules/grunt-contrib-nodeunit/node_modules/nodeunit/bin/nodeunit"
+    "test-cover": "istanbul cover node_modules/nodeunit/bin/nodeunit"
   },
   "dependencies": {
     "grunt": ">=0.4.5"
@@ -27,7 +27,8 @@
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-nodeunit": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "istanbul": "^0.4.3"
+    "istanbul": "^0.4.3",
+    "nodeunit": "^0.9.1"
   },
   "peerDependencies": {
     "grunt": ">=0.4.5"
